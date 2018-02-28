@@ -4,12 +4,21 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Domain\Price;
+use Domain\PriceComparator;
+use Infrastructure\NBPPriceConverter;
 
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext implements Context
 {
+    /** @var PriceComparator */
+    private $priceComparator;
+
+    /** @var int */
+    private $result;
+
     /**
      * Initializes context.
      *
@@ -26,15 +35,19 @@ class FeatureContext implements Context
      */
     public function iUseNbpPlComparator()
     {
-        throw new PendingException();
+        $this->priceComparator = new PriceComparator(new NBPPriceConverter());
     }
 
     /**
-     * @When I compare :arg1 and :arg2
+     * @When I compare :price1 and :price2
      */
-    public function iCompareAnd($arg1, $arg2)
+    public function iCompareAnd($price1, $price2)
     {
-        throw new PendingException();
+        preg_match('/(\d+)([A-Z]+)/', $price1, $match1);
+        preg_match('/(\d+)([A-Z]+)/', $price2, $match2);
+        $price1 = new Price($match1[1], $match1[2]);
+        $price2 = new Price($match2[1], $match2[2]);
+        $this->result = $this->priceComparator->compare($price1, $price2);
     }
 
     /**
@@ -42,6 +55,8 @@ class FeatureContext implements Context
      */
     public function itShouldReturnSomeResult()
     {
-        throw new PendingException();
+        if (!is_int($this->result)) {
+            throw new \DomainException('Returned value is not integer');
+        }
     }
 }
