@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MyProject" default="run">
+    <target name="phpcs" description="Check code style with PHP_CodeSniffer">
+        <exec executable="bin/phpcs" passthru="true" checkreturn="true">
+            <arg line="--standard=PSR1,PSR2 --extensions=php src"/>
+        </exec>
+    </target>
+    <target name="phpcpd" description="Generate pmd-cpd.xml using PHPCPD">
+        <exec executable="bin/phpcpd" passthru="true">
+            <arg line="src"/>
+        </exec>
+    </target>
+    <target name="phpspec">
+        <exec executable="bin/phpspec" passthru="true" checkreturn="true">
+            <arg line="run"/>
+        </exec>
+    </target>
+    <target name="behat">
+        <exec executable="bin/behat" passthru="true" checkreturn="true"/>
+    </target>
+    <target name="run" depends="phpcs,phpcpd,phpspec,behat"/>
+</project>
