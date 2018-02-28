@@ -10,6 +10,9 @@
             <arg line="src"/>
         </exec>
     </target>
+    <target name="phan" description="Check code with phan">
+        <exec executable="bin/phan" passthru="true" checkreturn="true"/>
+    </target>
     <target name="phpspec">
         <exec executable="bin/phpspec" passthru="true" checkreturn="true">
             <arg line="run"/>
@@ -18,5 +21,5 @@
     <target name="behat">
         <exec executable="bin/behat" passthru="true" checkreturn="true"/>
     </target>
-    <target name="run" depends="phpcs,phpcpd,phpspec,behat"/>
+    <target name="run" depends="phpcs,phpcpd,phan,phpspec,behat"/>
 </project>
